@@ -3,12 +3,14 @@
 import gulp from "gulp";
 import browsersync from "browser-sync";
 import sass from "gulp-sass";
+import minify from "gulp-minify";
 import uglify from "gulp-uglify";
 import cleanCSS from "gulp-clean-css";
 import plumber from "gulp-plumber";
 import concat from "gulp-concat";
 import rename from "gulp-rename";
 import del from "del";
+import autoprefixer from "gulp-autoprefixer";
 
 // use default task to launch Browsersync and watch JS files
 // gulp.task("sync", done => {
@@ -34,17 +36,8 @@ let reload = done => {
 // gulp.task("css", function() {
 let css = () => {
   return gulp
-    .src("assets/scss/**/*.scss")
-    .pipe(plumber())
-    .pipe(
-      sass({
-        outputStyle: "expanded",
-        includePaths: "node_modules"
-      })
-    )
-    .on("error", sass.logError)
-    .pipe(gulp.dest("assets/css"))
-    .pipe(uglify())
+    .src("assets/css/style.css")
+    .pipe(minify())
     .pipe(rename({ suffix: ".min" }))
     .pipe(cleanCSS())
     .pipe(gulp.dest("assets/css"))
@@ -69,8 +62,8 @@ let js = () => {
 
 // gulp.task("watchFiles", done => {
 let watch = done => {
-  gulp.watch("assets/scss/**/*", css);
-  gulp.watch("assets/js/**/*", js);
+  gulp.watch("assets/css/style.css", css);
+  gulp.watch(["assets/js/**/*", "!assets/js/custom.min.js"], js);
   gulp.watch("**/*.html", reload);
 };
 
